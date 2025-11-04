@@ -1,0 +1,207 @@
+/* =================================
+   Styles personnalisés pour le gestionnaire de tâches
+   ================================= */
+
+/* Variables de couleur */
+:root {
+    --primary-color: #0d6efd;
+    --success-color: #198754;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --light-bg: #f8f9fa;
+}
+
+/* Styles généraux */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--light-bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Navigation */
+.navbar-brand {
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+/* Cards de tâches */
+.task-card {
+    transition: all 0.3s ease;
+    border-left: 4px solid var(--primary-color);
+}
+
+.task-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.task-completed {
+    opacity: 0.7;
+    border-left-color: var(--success-color);
+    background-color: #f0f9f4;
+}
+
+.task-overdue {
+    border-left-color: var(--danger-color);
+    background-color: #fff5f5;
+}
+
+/* Checkbox de tâche */
+.task-checkbox {
+    text-decoration: none;
+    transition: transform 0.2s ease;
+}
+
+.task-checkbox:hover {
+    transform: scale(1.2);
+}
+
+/* Meta informations des tâches */
+.task-meta {
+    font-size: 0.875rem;
+}
+
+/* Badges personnalisés */
+.badge {
+    padding: 0.4rem 0.8rem;
+    font-weight: 500;
+}
+
+/* Boutons */
+.btn {
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Formulaires */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+
+.form-label {
+    color: #495057;
+}
+
+/* Cards générales */
+.card {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.card-header {
+    border-bottom: none;
+    padding: 1.25rem;
+}
+
+/* Alertes */
+.alert {
+    border: none;
+    border-radius: 8px;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.task-card {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .task-card .btn {
+        margin-top: 0.5rem;
+    }
+}
+
+/* Dropdown personnalisé */
+.dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: var(--light-bg);
+}
+
+.dropdown-item.active {
+    background-color: var(--primary-color);
+}
+
+/* Statistiques */
+.card-text.display-6 {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* Checkbox style amélioré */
+input[type="checkbox"] {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+}
+
+/* Scrollbar personnalisé */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--light-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #adb5bd;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #6c757d;
+}
+
+/* Messages flash stylisés */
+.alert-dismissible .btn-close {
+    padding: 0.75rem 1rem;
+}

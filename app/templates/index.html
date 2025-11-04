@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block title %}Accueil - Gestionnaire de Tâches{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="display-4">
+                <i class="bi bi-list-task"></i> Mes Tâches
+            </h1>
+            <a href="{{ url_for('main.add_task') }}" class="btn btn-primary btn-lg">
+                <i class="bi bi-plus-lg"></i> Ajouter une tâche
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Barre de recherche et filtres -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <form method="GET" action="{{ url_for('main.index') }}" class="d-flex">
+            <input type="text" 
+                   name="search" 
+                   class="form-control me-2" 
+                   placeholder="Rechercher une tâche..." 
+                   value="{{ search_query }}">
+            <button type="submit" class="btn btn-outline-primary">
+                <i class="bi bi-search"></i>
+            </button>
+            {% if search_query %}
+                <a href="{{ url_for('main.index') }}" class="btn btn-outline-secondary ms-2">
+                    <i class="bi bi-x"></i>
+                </a>
+            {% endif %}
+        </form>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="d-flex justify-content-end gap-2">
+            <!-- Filtre par statut -->
+            <div class="btn-group" role="group">
+                <a href="{{ url_for('main.index', sort=sort_by, status='all', search=search_query) }}" 
+                   class="btn btn-sm btn-outline-secondary {% if filter_status == 'all' %}active{% endif %}">
+                    Toutes
+                </a>
+                <a href="{{ url_for('main.index', sort=sort_by, status='pending', search=search_query) }}" 
+                   class="btn btn-sm btn-outline-warning {% if filter_status == 'pending' %}active{% endif %}">
+                    En cours
+                </a>
+                <a href="{{ url_for('main.index', sort=sort_by, status='completed', search=search_query) }}" 
+                   class="btn btn-sm btn-outline-success {% if filter_status == 'completed' %}active{% endif %}">
+                    Terminées
+                </a>
+            </div>
+            
+            <!-- Tri -->
+            <div class="dropdown">
+                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    <i class="bi bi-sort-down"></i> Trier
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a class="dropdown-item {% if sort_by == 'created_at' %}active{% endif %}" 
+                           href="{{ url_for('main.index', sort='created_at', status=filter_status, search=search_query) }}">
+                            Date de création
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item {% if sort_by == 'title' %}active{% endif %}" 
+                           href="{{ url_for('main.index', sort='title', status=filter_status, search=search_query) }}">
+                            Titre
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item {% if sort_by == 'due_date' %}active{% endif %}" 
+                           href="{{ url_for('main.index', sort='due_date', status=filter_status, search=search_query) }}">
+                            Date limite
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item {% if sort_by == 'status' %}active{% endif %}" 
+                           href="{{ url_for('main.index', sort='status', status=filter_status, search=search_query) }}">
+                            Statut
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistiques -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Total</h5>
+                <p class="card-text display-6">{{ tasks|length }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center bg-warning bg-opacity-10">
+            <div class="card-body">
+                <h5 class="card-title">En cours</h5>
+                <p class="card-text display-6">{{ tasks|selectattr('completed', 'equalto', False)|list|length }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center bg-success bg-opacity-10">
+            <div class="card-body">
+                <h5 class="card-title">Terminées</h5>
+                <p class="card-text display-6">{{ tasks|selectattr('completed', 'equalto', True)|list|length }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bouton action groupée -->
+{% if tasks|selectattr('completed', 'equalto', False)|list|length > 0 %}
+<div class="row mb-3">
+    <div class="col-12">
+        <form method="POST" action="{{ url_for('main.complete_all_tasks') }}" class="d-inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-success" 
+                    onclick="return confirm('Marquer toutes les tâches en cours comme terminées ?')">
+                <i class="bi bi-check-all"></i> Tout marquer comme terminé
+            </button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<!-- Liste des tâches -->
+<div class="row">
+    <div class="col-12">
+        {% if tasks %}
+            {% for task in tasks %}
+            <div class="card mb-3 task-card {% if task.completed %}task-completed{% endif %} {% if task.is_overdue() %}task-overdue{% endif %}">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <!-- Checkbox de statut -->
+                        <div class="col-auto">
+                            <form method="POST" action="{{ url_for('main.toggle_task', task_id=task.id) }}" class="d-inline">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" class="btn btn-link p-0 task-checkbox">
+                                    {% if task.completed %}
+                                        <i class="bi bi-check-circle-fill text-success fs-3"></i>
+                                    {% else %}
+                                        <i class="bi bi-circle fs-3 text-muted"></i>
+                                    {% endif %}
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <!-- Contenu de la tâche -->
+                        <div class="col">
+                            <h5 class="card-title mb-1 {% if task.completed %}text-decoration-line-through text-muted{% endif %}">
+                                {{ task.title }}
+                            </h5>
+                            
+                            {% if task.description %}
+                            <p class="card-text text-muted mb-2">
+                                {{ task.description[:100] }}{% if task.description|length > 100 %}...{% endif %}
+                            </p>
+                            {% endif %}
+                            
+                            <div class="task-meta">
+                                <small class="text-muted">
+                                    <i class="bi bi-calendar-plus"></i> 
+                                    Créée le {{ task.created_at.strftime('%d/%m/%Y à %H:%M') }}
+                                </small>
+                                
+                                {% if task.due_date %}
+                                    <small class="ms-3 {% if task.is_overdue() %}text-danger fw-bold{% else %}text-muted{% endif %}">
+                                        <i class="bi bi-calendar-event"></i>
+                                        {% if task.is_overdue() %}
+                                            <strong>En retard !</strong>
+                                        {% else %}
+                                            Échéance :
+                                        {% endif %}
+                                        {{ task.due_date.strftime('%d/%m/%Y à %H:%M') }}
+                                    </small>
+                                {% endif %}
+                                
+                                {% if task.completed %}
+                                    <span class="badge bg-success ms-2">Terminée</span>
+                                {% elif task.is_overdue() %}
+                                    <span class="badge bg-danger ms-2">En retard</span>
+                                {% else %}
+                                    <span class="badge bg-warning ms-2">En cours</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="col-auto">
+                            <a href="{{ url_for('main.edit_task', task_id=task.id) }}" 
+                               class="btn btn-sm btn-outline-primary me-2">
+                                <i class="bi bi-pencil"></i> Modifier
+                            </a>
+                            
+                            <form method="POST" action="{{ url_for('main.delete_task', task_id=task.id) }}" class="d-inline">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <button type="submit" 
+                                        class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?')">
+                                    <i class="bi bi-trash"></i> Supprimer
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info text-center">
+                <i class="bi bi-info-circle fs-1"></i>
+                <h4 class="mt-3">Aucune tâche trouvée</h4>
+                <p>
+                    {% if search_query %}
+                        Aucune tâche ne correspond à votre recherche.
+                    {% else %}
+                        Commencez par créer votre première tâche !
+                    {% endif %}
+                </p>
+                <a href="{{ url_for('main.add_task') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg"></i> Créer une tâche
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

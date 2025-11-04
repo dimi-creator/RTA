@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Inscription - Gestionnaire de Tâches{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow">
+            <div class="card-header bg-success text-white text-center">
+                <h3 class="mb-0">
+                    <i class="bi bi-person-plus"></i> Créer un compte
+                </h3>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('main.register') }}">
+                    {{ form.hidden_tag() }}
+                    
+                    <!-- Nom d'utilisateur -->
+                    <div class="mb-3">
+                        {{ form.username.label(class="form-label fw-bold") }}
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-person"></i>
+                            </span>
+                            {{ form.username(class="form-control" + (" is-invalid" if form.username.errors else ""), placeholder="Choisissez un nom d'utilisateur") }}
+                            {% if form.username.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.username.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="mb-3">
+                        {{ form.email.label(class="form-label fw-bold") }}
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-envelope"></i>
+                            </span>
+                            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="votre.email@exemple.com") }}
+                            {% if form.email.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Mot de passe -->
+                    <div class="mb-3">
+                        {{ form.password.label(class="form-label fw-bold") }}
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-lock"></i>
+                            </span>
+                            {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), placeholder="Minimum 6 caractères") }}
+                            {% if form.password.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.password.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Confirmation mot de passe -->
+                    <div class="mb-4">
+                        {{ form.confirm_password.label(class="form-label fw-bold") }}
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-lock-fill"></i>
+                            </span>
+                            {{ form.confirm_password(class="form-control" + (" is-invalid" if form.confirm_password.errors else ""), placeholder="Confirmez votre mot de passe") }}
+                            {% if form.confirm_password.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.confirm_password.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Bouton de soumission -->
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-success btn-lg") }}
+                    </div>
+                </form>
+                
+                <hr class="my-4">
+                
+                <!-- Lien vers la connexion -->
+                <div class="text-center">
+                    <p class="mb-0">Vous avez déjà un compte ?</p>
+                    <a href="{{ url_for('main.login') }}" class="btn btn-outline-primary mt-2">
+                        <i class="bi bi-box-arrow-in-right"></i> Se connecter
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

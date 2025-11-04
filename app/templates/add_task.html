@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Ajouter une tâche - Gestionnaire de Tâches{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">
+                    <i class="bi bi-plus-circle"></i> Créer une nouvelle tâche
+                </h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('main.add_task') }}">
+                    {{ form.hidden_tag() }}
+                    
+                    <!-- Titre -->
+                    <div class="mb-3">
+                        {{ form.title.label(class="form-label fw-bold") }}
+                        {{ form.title(class="form-control form-control-lg" + (" is-invalid" if form.title.errors else ""), placeholder="Ex: Acheter des courses") }}
+                        {% if form.title.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.title.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Description -->
+                    <div class="mb-3">
+                        {{ form.description.label(class="form-label fw-bold") }}
+                        {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""), rows="5", placeholder="Décrivez votre tâche en détail...") }}
+                        {% if form.description.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.description.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <small class="form-text text-muted">
+                            <i class="bi bi-info-circle"></i> Optionnel - Ajoutez des détails supplémentaires
+                        </small>
+                    </div>
+                    
+                    <!-- Date limite -->
+                    <div class="mb-4">
+                        {{ form.due_date.label(class="form-label fw-bold") }}
+                        {{ form.due_date(class="form-control" + (" is-invalid" if form.due_date.errors else "")) }}
+                        {% if form.due_date.errors %}
+                            <div class="invalid-feedback">
+                                {% for error in form.due_date.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <small class="form-text text-muted">
+                            <i class="bi bi-info-circle"></i> Optionnel - Définissez une échéance
+                        </small>
+                    </div>
+                    
+                    <!-- Boutons -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('main.index') }}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Annuler
+                        </a>
+                        {{ form.submit(class="btn btn-primary btn-lg") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Conseils -->
+        <div class="alert alert-info mt-4">
+            <h5><i class="bi bi-lightbulb"></i> Conseils</h5>
+            <ul class="mb-0">
+                <li>Utilisez un titre court et descriptif</li>
+                <li>Ajoutez des détails dans la description pour ne rien oublier</li>
+                <li>Définissez une date limite pour mieux organiser votre temps</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
