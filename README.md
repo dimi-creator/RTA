@@ -61,7 +61,7 @@ flask_task_manager/
 
 ---
 
-## 🚀 Installation et lancement
+##  Installation et lancement
 
 ### Prérequis
 - Python 3.8 ou supérieur
@@ -117,7 +117,7 @@ http://127.0.0.1:5000
 
 ---
 
-## 🎯 Utilisation
+##  Utilisation
 
 ### Mode sans authentification
 - Accédez directement à la page d'accueil
@@ -161,7 +161,7 @@ http://127.0.0.1:5000
 
 ---
 
-## 🛠️ Technologies utilisées
+##  Technologies utilisées
 
 ### Backend
 - **Flask 3.0** - Framework web Python
@@ -178,7 +178,7 @@ http://127.0.0.1:5000
 
 ---
 
-## 📊 Modèles de données
+##  Modèles de données
 
 ### User (Utilisateur)
 ```python
@@ -203,7 +203,7 @@ http://127.0.0.1:5000
 
 ---
 
-## 🔒 Sécurité
+##  Sécurité
 
 - ✅ **Protection CSRF** sur tous les formulaires (Flask-WTF)
 - ✅ **Hachage des mots de passe** avec Werkzeug
@@ -213,7 +213,7 @@ http://127.0.0.1:5000
 
 ---
 
-## 🎨 Personnalisation
+##  Personnalisation
 
 ### Modifier les couleurs
 Éditez `/app/static/css/style.css` :
@@ -271,19 +271,19 @@ Supprimez `app/database.db` et relancez l'application.
 
 ---
 
-## 📄 Licence
+##  Licence
 
 Ce projet est fourni à titre éducatif. Vous êtes libre de l'utiliser et de le modifier.
 
 ---
 
-## 👨‍💻 Auteur
+##  Auteur
 
-Créé avec ❤️ en utilisant Flask et Bootstrap
+Créé par **dimi-creator**
 
 ---
 
-## 🚀 Améliorations futures possibles
+##  Améliorations futures possibles
 
 - [ ] Pagination des tâches
 - [ ] Catégories et tags pour les tâches
@@ -297,4 +297,4 @@ Créé avec ❤️ en utilisant Flask et Bootstrap
 
 ---
 
-**Bon développement ! 🎉**
+**Bon développement ! **
