@@ -50,5 +50,13 @@ class Task(db.Model):
         Vérifie si la tâche est en retard
         """
         if self.due_date and not self.completed:
-            return datetime.utcnow() > self.due_date
+             # Correction : convertit la chaîne en datetime si besoin
+            due = self.due_date
+            if isinstance(due, str):
+                try:
+                    due = datetime.fromisoformat(due)
+                except ValueError:
+                    # Si le format n'est pas ISO, essaie un autre format ou retourne False
+                    return False
+            return datetime.utcnow() > due
         return False
