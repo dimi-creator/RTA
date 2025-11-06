@@ -2,10 +2,11 @@ import sqlite3
 import psycopg2
 from psycopg2.extras import execute_values
 from datetime import datetime
+import os
 
 # Configuration
 SQLITE_DB_PATH = "instance/database.db"
-PG_CONN_URI = "postgresql+psycopg2://postgres.budszmbedmfbzhxusbzx:zRdZaT06nGNFXxqU@aws-1-eu-north-1.pooler.supabase.com:5432/postgres"
+PG_CONN_URI = os.getenv('DATABASE_URL') 
 
 # --- Ne rien modifier sous cette ligne ---
 PG_CONN_URI = PG_CONN_URI.replace("+psycopg2", "")  # psycopg2 ne reconnaît pas ce suffixe

@@ -121,7 +121,6 @@ def edit_task(task_id):
         flash('Vous n\'avez pas la permission de modifier cette tâche.', 'danger')
         return redirect(url_for('main.index'))
     
-    form = TaskForm(obj=task)
     
     if isinstance(task.due_date, str):
         try:
@@ -131,11 +130,17 @@ def edit_task(task_id):
 
     form = TaskForm(obj=task)
 
+    if request.method == 'POST':
+        print("=== Données reçues :", request.form)
+        print("=== Erreurs du formulaire :", form.errors)
+
+
     if form.validate_on_submit():
         task.title = form.title.data
         task.description = form.description.data
         task.due_date = form.due_date.data
-
+        
+        
         db.session.commit()
         
         flash('Tâche mise à jour avec succès !', 'success')

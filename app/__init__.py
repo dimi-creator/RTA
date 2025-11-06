@@ -18,7 +18,7 @@ def create_app():
     app = Flask(__name__)
     
     # Configuration de l'application
-    app.config['SECRET_KEY'] = 'votre-cle-secrete-super-securisee-123'
+    app.config['SECRET_KEY'] =  os.getenv('SECRET_KEY', 'fallback_dev_key')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     

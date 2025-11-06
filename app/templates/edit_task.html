@@ -14,96 +14,96 @@
             <div class="card-body">
                 <form method="POST" action="{{ url_for('main.edit_task', task_id=task.id) }}">
                     {{ form.hidden_tag() }}
-                    
+
                     <!-- Informations de la tâche -->
                     <div class="alert alert-light border">
                         <small class="text-muted">
-                            <strong>Créée le :</strong> Créée le {{ task.created_at_dt.strftime('%d/%m/%Y à %H:%M') if task.created_at_dt else '' }}
+                            <strong>Créée le :</strong> Créée le {{ task.created_at_dt.strftime('%d/%m/%Y à %H:%M') if
+                            task.created_at_dt else '' }}
                             <br>
-                            <strong>Statut :</strong> 
+                            <strong>Statut :</strong>
                             {% if task.completed %}
-                                <span class="badge bg-success">Terminée</span>
+                            <span class="badge bg-success">Terminée</span>
                             {% else %}
-                                <span class="badge bg-warning">En cours</span>
+                            <span class="badge bg-warning">En cours</span>
                             {% endif %}
                         </small>
                     </div>
-                    
+
                     <!-- Titre -->
                     <div class="mb-3">
                         {{ form.title.label(class="form-label fw-bold") }}
-                        {{ form.title(class="form-control form-control-lg" + (" is-invalid" if form.title.errors else "")) }}
+                        {{ form.title(class="form-control form-control-lg" + (" is-invalid" if form.title.errors else
+                        "")) }}
                         {% if form.title.errors %}
-                            <div class="invalid-feedback">
-                                {% for error in form.title.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
+                        <div class="invalid-feedback">
+                            {% for error in form.title.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
                         {% endif %}
                     </div>
-                    
+
                     <!-- Description -->
                     <div class="mb-3">
                         {{ form.description.label(class="form-label fw-bold") }}
-                        {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""), rows="5") }}
+                        {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""),
+                        rows="5") }}
                         {% if form.description.errors %}
-                            <div class="invalid-feedback">
-                                {% for error in form.description.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
+                        <div class="invalid-feedback">
+                            {% for error in form.description.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
                         {% endif %}
                     </div>
-                    
+
                     <!-- Date limite -->
                     <div class="mb-4">
                         {{ form.due_date.label(class="form-label fw-bold") }}
                         {{ form.due_date(class="form-control" + (" is-invalid" if form.due_date.errors else "")) }}
                         {% if form.due_date.errors %}
-                            <div class="invalid-feedback">
-                                {% for error in form.due_date.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
+                        <div class="invalid-feedback">
+                            {% for error in form.due_date.errors %}
+                            {{ error }}
+                            {% endfor %}
+                        </div>
                         {% endif %}
                         {% if task.is_overdue() %}
-                            <small class="text-danger">
-                                <i class="bi bi-exclamation-triangle-fill"></i>
-                                <strong>Cette tâche est en retard !</strong>
-                            </small>
+                        <small class="text-danger">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <strong>Cette tâche est en retard !</strong>
+                        </small>
                         {% endif %}
                     </div>
-                    
-                    <!-- Actions rapides -->
+
+                    <!-- Actions rapides (SANS form imbriqué) -->
                     <div class="mb-4">
                         <label class="form-label fw-bold">Actions rapides</label>
                         <div class="d-flex gap-2">
-                            <form method="POST" action="{{ url_for('main.toggle_task', task_id=task.id) }}" class="flex-grow-1">
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                <button type="submit" class="btn btn-outline-{% if task.completed %}warning{% else %}success{% endif %} w-100">
-                                    <i class="bi bi-{% if task.completed %}arrow-counterclockwise{% else %}check-circle{% endif %}"></i>
-                                    Marquer comme {% if task.completed %}non terminée{% else %}terminée{% endif %}
-                                </button>
-                            </form>
-                            
-                            <form method="POST" action="{{ url_for('main.delete_task', task_id=task.id) }}" class="flex-grow-1">
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                <button type="submit" 
-                                        class="btn btn-outline-danger w-100"
-                                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?')">
-                                    <i class="bi bi-trash"></i> Supprimer
-                                </button>
-                            </form>
+                            <button hx-post="{{ url_for('main.toggle_task', task_id=task.id) }}"
+                                hx-headers='{"X-CSRF-Token": "{{ csrf_token() }}"}' hx-swap="outerHTML" hx-target="body"
+                                class="btn btn-outline-{% if task.completed %}warning{% else %}success{% endif %} w-100">
+                                <i
+                                    class="bi bi-{% if task.completed %}arrow-counterclockwise{% else %}check-circle{% endif %}"></i>
+                                Marquer comme {% if task.completed %}non terminée{% else %}terminée{% endif %}
+                            </button>
+
+                            <button hx-post="{{ url_for('main.delete_task', task_id=task.id) }}"
+                                hx-headers='{"X-CSRF-Token": "{{ csrf_token() }}"}' hx-confirm="Supprimer cette tâche ?"
+                                hx-swap="none" class="btn btn-outline-danger w-100">
+                                <i class="bi bi-trash"></i> Supprimer
+                            </button>
                         </div>
                     </div>
-                    
+
                     <!-- Boutons de formulaire -->
                     <hr>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <a href="{{ url_for('main.index') }}" class="btn btn-secondary">
                             <i class="bi bi-x-circle"></i> Annuler
                         </a>
-                        {{ form.submit(class="btn btn-warning btn-lg") }}
+                        {{ form.submit(class="btn btn-warning btn-lg ") }}
                     </div>
                 </form>
             </div>

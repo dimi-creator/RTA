@@ -65,6 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (!isValid) {
                 e.preventDefault();
+                
             }
         });
     });
