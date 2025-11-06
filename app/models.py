@@ -60,3 +60,23 @@ class Task(db.Model):
                     return False
             return datetime.utcnow() > due
         return False
+    
+    @property
+    def created_at_dt(self):
+        val = self.created_at
+        if isinstance(val, str):
+            try:
+                return datetime.fromisoformat(val)
+            except ValueError:
+                return None
+        return val
+    
+    @property
+    def due_date_dt(self):
+        val = self.due_date
+        if isinstance(val, str):
+            try:
+                return datetime.fromisoformat(val)
+            except ValueError:
+                return None
+        return val

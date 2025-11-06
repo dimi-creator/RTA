@@ -170,7 +170,7 @@
                             <div class="task-meta">
                                 <small class="text-muted">
                                     <i class="bi bi-calendar-plus"></i> 
-                                    Créée le {{ task.created_at.strftime('%d/%m/%Y à %H:%M') }}
+                                    Créée le {{ task.created_at_dt.strftime('%d/%m/%Y à %H:%M') if task.created_at_dt else '' }}
                                 </small>
                                 
                                 {% if task.due_date %}
@@ -181,7 +181,7 @@
                                         {% else %}
                                             Échéance :
                                         {% endif %}
-                                        {{ task.due_date.strftime('%d/%m/%Y à %H:%M') }}
+                                        {{ task.due_date_dt.strftime('%d/%m/%Y à %H:%M') if task.due_date_dt else '' }}
                                     </small>
                                 {% endif %}
                                 

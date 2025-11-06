@@ -123,11 +123,19 @@ def edit_task(task_id):
     
     form = TaskForm(obj=task)
     
+    if isinstance(task.due_date, str):
+        try:
+            task.due_date = datetime.fromisoformat(task.due_date)
+        except ValueError:
+            task.due_date = None
+
+    form = TaskForm(obj=task)
+
     if form.validate_on_submit():
         task.title = form.title.data
         task.description = form.description.data
         task.due_date = form.due_date.data
-        
+
         db.session.commit()
         
         flash('Tâche mise à jour avec succès !', 'success')

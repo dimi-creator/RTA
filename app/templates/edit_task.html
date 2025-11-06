@@ -18,7 +18,7 @@
                     <!-- Informations de la tâche -->
                     <div class="alert alert-light border">
                         <small class="text-muted">
-                            <strong>Créée le :</strong> {{ task.created_at.strftime('%d/%m/%Y à %H:%M') }}
+                            <strong>Créée le :</strong> Créée le {{ task.created_at_dt.strftime('%d/%m/%Y à %H:%M') if task.created_at_dt else '' }}
                             <br>
                             <strong>Statut :</strong> 
                             {% if task.completed %}
