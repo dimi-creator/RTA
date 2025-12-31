@@ -8,6 +8,7 @@ from flask_wtf.csrf import CSRFProtect
 import os
 from sqlalchemy import create_engine
 from sqlalchemy import exc as sa_exc
+import logging
 
 # Initialisation des extensions
 db = SQLAlchemy()
@@ -22,40 +23,34 @@ def create_app():
     # Configuration de l'application
     app.config['SECRET_KEY'] =  os.getenv('SECRET_KEY', 'fallback_dev_key')
 
+    # Par défaut, utiliser SQLite local (assure que SQLALCHEMY_DATABASE_URI
+    # est toujours défini avant d'initialiser les extensions)
+    os.makedirs(app.instance_path, exist_ok=True)
+    database_path = os.path.join(app.instance_path, 'tasks.db')
+    default_sqlite = f"sqlite:///{database_path}"
+    app.config['SQLALCHEMY_DATABASE_URI'] = default_sqlite
+
+    # Puis, si une URL distante est fournie, tenter une connexion rapide et
+    # remplacer la config si la connexion réussit.
     database_url = os.getenv('DATABASE_URL')
-
     if database_url and database_url.startswith("postgres://"):
-        database_url = database_url.replace(
-            "postgres://", "postgresql://", 1
-        )
+        database_url = database_url.replace("postgres://", "postgresql://", 1)
 
-    # Si une URL est fournie, tenter de se connecter d'abord (timeout court),
-    # sinon basculer sur SQLite local pour le développement.
-    tried_database_url = None
     if database_url:
-        tried_database_url = database_url
         try:
             engine = create_engine(database_url, connect_args={"connect_timeout": 3})
             conn = engine.connect()
             conn.close()
+            app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+            logging.getLogger(__name__).info('Connected to remote DB; using DATABASE_URL')
         except sa_exc.OperationalError:
-            print(
-                "[warning] Connexion à la base distante impossible, bascule vers SQLite local"
+            logging.getLogger(__name__).warning(
+                'Connexion à la base distante impossible, utilisation de SQLite local'
             )
-            database_url = None
         except Exception:
-            print(
-                "[warning] Échec connexion DB (non-OperationalError), bascule vers SQLite local"
+            logging.getLogger(__name__).warning(
+                'Échec connexion DB (non-OperationalError), utilisation de SQLite local'
             )
-            database_url = None
-
-    # Fallback vers une base SQLite locale pour le développement
-    if not database_url:
-        os.makedirs(app.instance_path, exist_ok=True)
-        database_path = os.path.join(app.instance_path, 'tasks.db')
-        database_url = f"sqlite:///{database_path}"
-
-    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
     # Initialisation des extensions avec l'application
