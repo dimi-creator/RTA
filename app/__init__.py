@@ -38,7 +38,7 @@ def create_app():
     app.register_blueprint(main)
     
     # Création des tables de la base de données
-    with app.app_context():
-        db.create_all()
+    #with app.app_context():
+        #db.create_all()
     
     return app
