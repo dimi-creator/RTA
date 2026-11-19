@@ -18,7 +18,7 @@
 
 <!-- Barre de recherche et filtres -->
 <div class="row mb-4">
-    <div class="col-md-6">
+    <div class="col-md-6 mb-3">
         <form method="GET" action="{{ url_for('main.index') }}" class="d-flex">
             <input type="text" 
                    name="search" 
@@ -37,7 +37,8 @@
     </div>
     
     <div class="col-md-6">
-        <div class="d-flex justify-content-end gap-2">
+        <!-- remplacer center par end s'il faut utiliser le dropdown tri plus bas -->
+        <div class="d-flex justify-content-center gap-2">   
             <!-- Filtre par statut -->
             <div class="btn-group" role="group">
                 <a href="{{ url_for('main.index', sort=sort_by, status='all', search=search_query) }}" 
@@ -55,7 +56,7 @@
             </div>
             
             <!-- Tri -->
-            <div class="dropdown">
+            <!-- <div class="dropdown">
                 <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
                     <i class="bi bi-sort-down"></i> Trier
                 </button>
@@ -85,7 +86,7 @@
                         </a>
                     </li>
                 </ul>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
